@@ -8,10 +8,9 @@ M.getLegalMoves = function(gs)
 
     local function addEmptyCells(board)
         for cell = 1, 9 do
-            if gs.getCellOwner(board, cell) then goto nextCell end
-            table.insert(moves, { board, cell })
-
-            ::nextCell::
+            if not gs.getCellOwner(board, cell) then
+                table.insert(moves, { board, cell })
+            end
         end
     end
 
@@ -21,10 +20,7 @@ M.getLegalMoves = function(gs)
     end
 
     for board = 1, 9 do
-        if gs.getBoardOwner(board) then goto nextBoard end
-        addEmptyCells(board)
-
-        ::nextBoard::
+        if not gs.getBoardOwner(board) then addEmptyCells(board) end
     end
 
     return moves
