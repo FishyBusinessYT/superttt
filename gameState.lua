@@ -11,6 +11,9 @@ return function()
     ---@field lastPickedCell integer
     ---@field getBoardOwner function(board: integer): integer?
     ---@field getCellOwner function(board: integer, cell: integer): integer?
+    ---@field placeMark function(board: integer, cell: integer): nil
+    ---@field removeMark function(board: integer, cell: integer): nil
+    ---@field checkBoards function()
     local self = {}
 
     self.xmarks = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -19,6 +22,36 @@ return function()
     self.owon = 0
     self.isXsTurn = true
     self.lastPickedCell = nil
+
+    local checkBoards = function()
+        self.owon = 0
+        self.xwon = 0
+
+        -- stylua: ignore start
+        local masks = {
+            292, 146, 73, --Columns
+            448, 56, 7, --Rows
+            273, 84, --Diagonals
+        }
+        -- stylua: ignore end
+
+        for idx = 1, 9 do
+            for _, mask in ipairs(masks) do
+                if self.omarks[idx] & mask == mask then
+                    self.owon = BU.setBit(self.owon, idx, 1)
+                    break
+                elseif self.xmarks[idx] & mask == mask then
+                    self.xwon = BU.setBit(self.xwon, idx, 1)
+                    break
+                end
+            end
+        end
+
+        assert(
+            self.owon & self.xwon == 0,
+            'The same board has somehow been won by both players'
+        )
+    end
 
     ---Check who's won this board
     ---@param board integer 1-9
@@ -52,7 +85,7 @@ return function()
     ---Place a mark on the specified cell
     ---@param board integer
     ---@param cell integer
-    self.markCell = function(board, cell)
+    self.placeMark = function(board, cell)
         if self.getCellOwner(board, cell) or self.getBoardOwner(board) then
             error('Illegal move made', 2)
         end
@@ -63,7 +96,9 @@ return function()
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 1)
         end
 
-        self.checkBoards()
+        self.isXsTurn = not self.isXsTurn
+
+        checkBoards()
     end
 
     ---Remove the mark from the specified cell
@@ -71,6 +106,7 @@ return function()
     ---@param cell integer
     self.removeMark = function(board, cell)
         local owner = self.getCellOwner(board, cell)
+
         if not owner then
             error('Tried to remove nonexistent mark', 2)
         elseif owner == 1 then -- Remove X mark
@@ -79,7 +115,7 @@ return function()
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
         end
 
-        self.checkBoards()
+        checkBoards()
     end
 
     return self
