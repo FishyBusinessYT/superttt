@@ -97,6 +97,7 @@ return function()
         end
 
         self.isXsTurn = not self.isXsTurn
+        self.lastPickedCell = cell
 
         checkBoards()
     end
@@ -104,7 +105,7 @@ return function()
     ---Remove the mark from the specified cell
     ---@param board integer
     ---@param cell integer
-    self.removeMark = function(board, cell)
+    self.removeMark = function(board, cell) --TODO maintain and use undo history instead to properly update 'lastPickedCell'
         local owner = self.getCellOwner(board, cell)
 
         if not owner then
@@ -116,6 +117,33 @@ return function()
         end
 
         checkBoards()
+    end
+
+    ---Get all valid moves from the current board position
+    ---@return table moves List of valid moves
+    self.getLegalMoves = function()
+        local moves = {}
+
+        local function addEmptyCells(board)
+            for cell = 1, 9 do
+                if not self.getCellOwner(board, cell) then
+                    table.insert(moves, { board, cell })
+                end
+            end
+        end
+
+        if
+            self.lastPickedCell and not self.getBoardOwner(self.lastPickedCell)
+        then
+            addEmptyCells(self.lastPickedCell)
+            return moves
+        end
+
+        for board = 1, 9 do
+            if not self.getBoardOwner(board) then addEmptyCells(board) end
+        end
+
+        return moves
     end
 
     return self
