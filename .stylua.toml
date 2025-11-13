@@ -1,4 +1,4 @@
-syntax = 'LuaJIT'
+syntax = 'Lua54'
 column_width = 80
 indent_type = 'Spaces'
 indent_width = 4
