@@ -10,7 +10,7 @@ M.printBin = function(num)
         num = num >> 1
     end
 
-    print(result)
+    print(string.format('%09d', result))
 end
 
 M.getBit = function(num, index)
