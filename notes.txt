@@ -1,0 +1,26 @@
+The game state:
+
+    omarks: An array of 9-bit numbers representing all of O's marks on every board.
+    xmarks: Same thing but for X.
+    owon: A 9-bit integer representing all of the boards where O has already won.
+    xwon: Same thing but for X, these are essentially the same thing as the other boards.
+
+    The system is designed so that omarks[i] & xmarks[i] always equals 0. That
+    is, no board (i) can have a mark (m) for both players at the same time.
+
+    Viualization of a board:
+
+    +-----+-----+-----+
+    |     |     |     |     omarks = 0b110100010
+    |  X  |  O  |  X  |
+    |     |     |     |     omarks = 0d418
+    +-----+-----+-----+
+    |     |     |     |     xmarks = 0b000010101
+    |     |  X  |  O  |
+    |     |     |     |     xmarks = 0d21
+    +-----+-----+-----+
+    |     |     |     |
+    |     |  O  |  O  |     bit index: 987654321
+    |     |     |     |
+    +-----+-----+-----+
+
