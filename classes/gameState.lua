@@ -8,13 +8,6 @@ return function()
     ---@field xwon integer
     ---@field owon integer
     ---@field isXsTurn boolean
-    ---@field moveHistory table<integer, integer>[]
-    ---
-    ---@field getBoardOwner function(board: integer): integer?
-    ---@field getCellOwner function(board: integer, cell: integer): integer?
-    ---@field placeMark function(board: integer, cell: integer): nil
-    ---@field undoMove function(): nil
-    ---@field checkBoards function()
     local self = {}
 
     self.xmarks = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -22,7 +15,8 @@ return function()
     self.xwon = 0
     self.owon = 0
     self.isXsTurn = true
-    self.moveHistory = {}
+
+    local moveHistory = {}
 
     local checkBoards = function()
         self.owon = 0
@@ -104,9 +98,9 @@ return function()
 
     ---Restore game state to what it was before the last move was played
     self.undoMove = function()
-        if #self.moveHistory == 0 then error('No moves to undo', 2) end
+        if #moveHistory == 0 then error('No moves to undo', 2) end
 
-        local move = table.remove(self.moveHistory)
+        local move = table.remove(moveHistory)
         local board, cell = move[1], move[2]
         local owner = self.getCellOwner(board, cell)
 
@@ -132,10 +126,9 @@ return function()
             end
         end
 
-        if
-            self.moveHistory[#self.moveHistory][2] and not self.getBoardOwner(self.moveHistory[#self.moveHistory])
-        then
-            addEmptyCells(self.moveHistory[#self.moveHistory][2])
+        local lastMove = moveHistory[#moveHistory]
+        if lastMove[2] and not self.getBoardOwner(lastMove[1]) then
+            addEmptyCells(moveHistory[#moveHistory][2])
             return moves
         end
 
