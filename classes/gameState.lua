@@ -8,7 +8,6 @@ return function()
     ---@field xwon integer
     ---@field owon integer
     ---@field isXsTurn boolean
-    ---@field lastPickedCell integer Isn't this also stored in moveHistory now?
     ---@field moveHistory table<integer, integer>[]
     ---
     ---@field getBoardOwner function(board: integer): integer?
@@ -23,7 +22,6 @@ return function()
     self.xwon = 0
     self.owon = 0
     self.isXsTurn = true
-    self.lastPickedCell = nil
     self.moveHistory = {}
 
     local checkBoards = function()
@@ -100,7 +98,6 @@ return function()
         end
 
         self.isXsTurn = not self.isXsTurn
-        self.lastPickedCell = cell
 
         checkBoards()
     end
@@ -119,7 +116,6 @@ return function()
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
         end
 
-        self.lastPickedCell = self.moveHistory[#self.moveHistory][2]
         checkBoards()
     end
 
@@ -137,9 +133,9 @@ return function()
         end
 
         if
-            self.lastPickedCell and not self.getBoardOwner(self.lastPickedCell)
+            self.moveHistory[#self.moveHistory][2] and not self.getBoardOwner(self.moveHistory[#self.moveHistory])
         then
-            addEmptyCells(self.lastPickedCell)
+            addEmptyCells(self.moveHistory[#self.moveHistory][2])
             return moves
         end
 
