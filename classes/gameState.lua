@@ -78,9 +78,10 @@ return function()
     end
 
     ---Place a mark on the specified cell
-    ---@param board integer
-    ---@param cell integer
-    self.placeMark = function(board, cell)
+    ---@param move [integer, integer]
+    self.placeMark = function(move)
+        local board, cell = move[1], move[2]
+
         if self.getCellOwner(board, cell) or self.getBoardOwner(board) then
             error('Illegal move made', 2)
         end
