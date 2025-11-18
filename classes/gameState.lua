@@ -8,12 +8,6 @@ return function()
     ---@field xwon integer
     ---@field owon integer
     ---@field isXsTurn boolean
-    ---@field lastPickedCell integer
-    ---@field getBoardOwner function(board: integer): integer?
-    ---@field getCellOwner function(board: integer, cell: integer): integer?
-    ---@field placeMark function(board: integer, cell: integer): nil
-    ---@field removeMark function(board: integer, cell: integer): nil
-    ---@field checkBoards function()
     local self = {}
 
     self.xmarks = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -21,7 +15,8 @@ return function()
     self.xwon = 0
     self.owon = 0
     self.isXsTurn = true
-    self.lastPickedCell = nil
+
+    local moveHistory = {}
 
     local checkBoards = function()
         self.owon = 0
@@ -97,24 +92,26 @@ return function()
         end
 
         self.isXsTurn = not self.isXsTurn
-        self.lastPickedCell = cell
+        table.insert(moveHistory, {board, cell})
 
         checkBoards()
     end
 
-    ---Remove the mark from the specified cell
-    ---@param board integer
-    ---@param cell integer
-    self.removeMark = function(board, cell) --TODO maintain and use undo history instead to properly update 'lastPickedCell'
+    ---Restore game state to what it was before the last move was played
+    self.undoMove = function()
+        if #moveHistory == 0 then error('No moves to undo', 2) end
+
+        local move = table.remove(moveHistory)
+        local board, cell = move[1], move[2]
         local owner = self.getCellOwner(board, cell)
 
-        if not owner then
-            error('Tried to remove nonexistent mark', 2)
-        elseif owner == 1 then -- Remove X mark
+        if owner == 1 then -- Remove X mark
             self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
         elseif owner == 2 then -- Remove O mark
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
         end
+
+        self.isXsTurn = not self.isXsTurn
 
         checkBoards()
     end
@@ -132,10 +129,9 @@ return function()
             end
         end
 
-        if
-            self.lastPickedCell and not self.getBoardOwner(self.lastPickedCell)
-        then
-            addEmptyCells(self.lastPickedCell)
+        local lastMove = moveHistory[#moveHistory]
+        if lastMove and not self.getBoardOwner(lastMove[1]) then
+            addEmptyCells(moveHistory[#moveHistory][2])
             return moves
         end
 

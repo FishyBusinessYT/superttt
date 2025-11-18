@@ -1,9 +1,19 @@
 The game state:
 
-    omarks: An array of 9-bit numbers representing all of O's marks on every board.
-    xmarks: Same thing but for X.
-    owon: A 9-bit integer representing all of the boards where O has already won.
-    xwon: Same thing but for X, these are essentially the same thing as the other boards.
+    xmarks: An array of 9-bit numbers representing all of X's marks on every board.
+    omarks: Same thing but for O.
+    xwon: A 9-bit integer representing all of the boards where X has already won.
+    owon: Same thing but for O.
+    isXsTurn: Keeps track of who's to place their mark next. Toggled whenever a
+     mark is placed or removed. X goes first, so its initial value is True.
+    lastPickedCell: Which of the 9 cells was picked last. May influence the next
+     turn's options. Remove later.
+    moveHistory: Keeps track of all the moves that have been made until this
+     point. Useful for undo and search algorithms later on.
+
+    checkBoards: This function updates xwon and owon according to the marks
+     placed by either player. Should also check which player's won.
+    getBoardOwner: This function checks  either 1, 2, or nil.
 
     The system is designed so that omarks[i] & xmarks[i] always equals 0. That
     is, no board (i) can have a mark (m) for both players at the same time.
@@ -24,3 +34,12 @@ The game state:
     |     |     |     |
     +-----+-----+-----+
 
+
+A move:
+
+    A move is a tuple containing two integer numbers from 1-9, one for the board
+     and another for the cell. It can pretty much be interpreted as a set of 
+     coordinates where x=board and y=cell.
+
+    move[1]: The board
+    move[2]: The cell
