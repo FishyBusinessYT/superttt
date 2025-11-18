@@ -92,6 +92,7 @@ return function()
         end
 
         self.isXsTurn = not self.isXsTurn
+        table.insert(moveHistory, {board, cell})
 
         checkBoards()
     end
@@ -110,6 +111,8 @@ return function()
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
         end
 
+        self.isXsTurn = not self.isXsTurn
+
         checkBoards()
     end
 
@@ -127,7 +130,7 @@ return function()
         end
 
         local lastMove = moveHistory[#moveHistory]
-        if lastMove[2] and not self.getBoardOwner(lastMove[1]) then
+        if lastMove and not self.getBoardOwner(lastMove[1]) then
             addEmptyCells(moveHistory[#moveHistory][2])
             return moves
         end
