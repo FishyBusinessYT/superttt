@@ -36,6 +36,7 @@ local function testInitialState()
         cellCounter = cellCounter + 1
     end
 end
+
 testInitialState()
 
 --- Test moves TODO TEST MOVING AS O AS WELL
@@ -55,6 +56,17 @@ for i = 2, 9 do
     assert(gameState.omarks[i] == 0)
 end
 
+--- Test move generation
+local legalMoves = gameState.getLegalMoves()
+
+-- The list should only contain the other 8 cells on board 1.
+assert(#legalMoves == 8)
+for idx, move in ipairs(legalMoves) do
+    local cell = idx + 1
+    assert(move[1] == 1)
+    assert(move[2] == cell)
+end
+
 --- Test move undo
 -- Logically, undoing the first ever move should restore the game to its
 -- original state.
@@ -65,3 +77,4 @@ testInitialState()
 -- at all.
 assert(not pcall(gameState.undoMove))
 testInitialState()
+
