@@ -60,10 +60,10 @@ return function()
     end
 
     ---Check who's taken this cell
-    ---@param board integer 1-9
-    ---@param cell integer 1-9
+    ---@param move [integer, integer]
     ---@return integer? 1 for X, 2 for O, nil for neither
-    self.getCellOwner = function(board, cell)
+    self.getCellOwner = function(move)
+        local board, cell = move[1], move[2]
         if
             BU.getBit(self.xmarks[board], cell) == 1
             --or BU.getBit(self.xwon, board) == 1
@@ -78,10 +78,11 @@ return function()
     end
 
     ---Place a mark on the specified cell
-    ---@param board integer
-    ---@param cell integer
-    self.placeMark = function(board, cell)
-        if self.getCellOwner(board, cell) or self.getBoardOwner(board) then
+    ---@param move [integer, integer]
+    self.placeMark = function(move)
+        local board, cell = move[1], move[2]
+
+        if self.getCellOwner(move) or self.getBoardOwner(board) then
             error('Illegal move made', 2)
         end
 
