@@ -39,7 +39,7 @@ end
 
 testInitialState()
 
---- Test moves TODO TEST MOVING AS O AS WELL
+--- Test moving as X
 -- First mark can be placed anywhere
 assert(pcall(gameState.placeMark, { 1, 1 }))
 
@@ -49,9 +49,7 @@ assert(not gameState.isXsTurn)
 -- Trying to place a mark on any board other than 5 should raise an exception
 -- and not change the game state
 for i = 2, 9 do
-    local succeeded = pcall(gameState.placeMark, { i, 1 })
-
-    assert(not succeeded)
+    assert(not pcall(gameState.placeMark, { i, 1 }))
     assert(not gameState.isXsTurn)
     assert(gameState.omarks[i] == 0)
 end
@@ -67,9 +65,18 @@ for idx, move in ipairs(legalMoves) do
     assert(move[2] == cell)
 end
 
+--- Test moving as O
+-- Only placing a mark on board 1 should be allowed
+assert(pcall(gameState.placeMark, {1, 2}))
+assert(gameState.omarks[1] == 2)
+assert(gameState.isXsTurn)
+
 --- Test move undo
--- Logically, undoing the first ever move should restore the game to its
--- original state.
+-- Logically, undoing the first two moves should fully restore the game state.
+gameState.undoMove()
+assert(gameState.omarks[1] == 0)
+assert(not gameState.isXsTurn)
+
 gameState.undoMove()
 testInitialState()
 
