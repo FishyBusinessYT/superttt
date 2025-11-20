@@ -92,72 +92,76 @@ testInitialState()
 
 --- Test board checking
 -- Let's have X take the first row of cells of the first board
-assert(pcall(gameState.placeMark, { 1, 2 })) -- X
+assert(pcall(gameState.placeMark, { 1, 2 })) -- X1
 assert(not gameState.isXsTurn)
 assert(gameState.xmarks[1] == 2)
 
-assert(pcall(gameState.placeMark, { 2, 1 })) -- O
+assert(pcall(gameState.placeMark, { 2, 1 })) -- O2
 assert(gameState.isXsTurn)
 assert(gameState.omarks[2] == 1)
 
-assert(pcall(gameState.placeMark, { 1, 3 })) -- X
+assert(pcall(gameState.placeMark, { 1, 3 })) -- X3
 assert(not gameState.isXsTurn)
 assert(gameState.xmarks[1] == 6)
 
-assert(pcall(gameState.placeMark, { 3, 1 })) -- O
+assert(pcall(gameState.placeMark, { 3, 1 })) -- O4
 assert(gameState.isXsTurn)
 assert(gameState.omarks[3] == 1)
 
-assert(pcall(gameState.placeMark, { 1, 1 })) -- X
+assert(pcall(gameState.placeMark, { 1, 1 })) -- X5
 assert(not gameState.isXsTurn)
 assert(gameState.xmarks[1] == 7)
 
 -- If board checking works properly, X should have taken the first board by now
 assert(gameState.xwon == 1)
 
+-- Now let's have O take the top-center board
+assert(pcall(gameState.placeMark, { 2, 3 })) -- O6
+assert(gameState.isXsTurn)
+assert(gameState.omarks[2] == 5)
+
+assert(pcall(gameState.placeMark, { 3, 2 })) -- X7
+assert(not gameState.isXsTurn)
+assert(gameState.xmarks[3] == 2)
+
+assert(pcall(gameState.placeMark, { 2, 2 })) -- O8
+assert(gameState.isXsTurn)
+assert(gameState.omarks[2] == 7)
+
+-- If board checks work properly, O should have now taken the second board
+assert(gameState.owon == 2)
+
 --[[
-
 This is what the board looks like right now. Every mark is labeled according
-to the order in which they were placed
+to the order in which they were placed:
 
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
     |  X  |  X  |  X  | |  O  |  O  |  O  | |  O  |  X  |     |
-    |  5  |  1  |  3  | |  2  | 10  |  8  | |  4  |  9  |     |
+    |  5  |  1  |  3  | |  2  |  8  |  6  | |  4  |  7  |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
-    |  O  |     |     | |     |     |     | |     |     |     |
-    |  6  |     |     | |     |     |     | |     |     |     |
-    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
-    |     |     |     | |     |     |     | |     |     |     |
-    |     |     |     | |     |     |     | |     |     |     |
-    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-
-    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
-    |     |  X  |     | |     |     |     | |     |     |     |
-    |     |  7  |     | |     |     |     | |     |     |     |
-    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
     |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
-    |     |     |     | |     |     |     | |     |     |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
-    |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
     |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
+    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
+    |     |     |     | |     |     |     | |     |     |     |
+    |     |     |     | |     |     |     | |     |     |     |
+    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
+    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
+    |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
     |     |     |     | |     |     |     | |     |     |     |
+    |     |     |     | |     |     |     | |     |     |     |
+    +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
     |     |     |     | |     |     |     | |     |     |     |
     |     |     |     | |     |     |     | |     |     |     |
     +-----+-----+-----+ +-----+-----+-----+ +-----+-----+-----+
@@ -165,6 +169,5 @@ to the order in which they were placed
 
 --- DISALLOW PLAYING ON BOARD 1
 --- GENERATE VALID MOVES WHEN BOARD 1 IS 'FORCED'
---- CHECK IF O CAN WIN BOARDS
 --- CHECK GAME WIN STATE
 --- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
