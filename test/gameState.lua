@@ -43,8 +43,8 @@ testInitialState()
 -- First mark can be placed anywhere
 assert(pcall(gameState.placeMark, { 1, 1 }))
 
-assert(gameState.xmarks[1] == 1)
 assert(not gameState.isXsTurn)
+assert(gameState.xmarks[1] == 1)
 
 -- Trying to place a mark on any board other than 5 should raise an exception
 -- and not change the game state
@@ -53,6 +53,11 @@ for i = 2, 9 do
     assert(not gameState.isXsTurn)
     assert(gameState.omarks[i] == 0)
 end
+
+-- Then again, making the same move twice should not be allowed either
+assert(not pcall(gameState.placeMark, { 1, 1 }))
+assert(not gameState.isXsTurn)
+assert(gameState.omarks[1] == 1)
 
 --- Test move generation
 local legalMoves = gameState.getLegalMoves()
@@ -67,15 +72,15 @@ end
 
 --- Test moving as O
 -- Only placing a mark on board 1 should be allowed
-assert(pcall(gameState.placeMark, {1, 2}))
-assert(gameState.omarks[1] == 2)
+assert(pcall(gameState.placeMark, { 1, 2 }))
 assert(gameState.isXsTurn)
+assert(gameState.omarks[1] == 2)
 
 --- Test move undo
 -- Logically, undoing the first two moves should fully restore the game state.
 gameState.undoMove()
-assert(gameState.omarks[1] == 0)
 assert(not gameState.isXsTurn)
+assert(gameState.omarks[1] == 0)
 
 gameState.undoMove()
 testInitialState()
@@ -84,4 +89,3 @@ testInitialState()
 -- at all.
 assert(not pcall(gameState.undoMove))
 testInitialState()
-
