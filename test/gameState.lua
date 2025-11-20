@@ -89,3 +89,36 @@ testInitialState()
 -- at all.
 assert(not pcall(gameState.undoMove))
 testInitialState()
+
+--- Test board checking
+-- Let's have X take the first row of cells of the first board
+assert(pcall(gameState.placeMark, { 1, 2 })) -- X
+assert(not gameState.isXsTurn)
+assert(gameState.xmarks[1] == 2)
+
+assert(pcall(gameState.placeMark, { 2, 1 })) -- O
+assert(gameState.isXsTurn)
+assert(gameState.omarks[2] == 1)
+
+assert(pcall(gameState.placeMark, { 1, 3 })) -- X
+assert(not gameState.isXsTurn)
+assert(gameState.xmarks[1] == 6)
+
+assert(pcall(gameState.placeMark, { 3, 1 })) -- O
+assert(gameState.isXsTurn)
+assert(gameState.omarks[3] == 1)
+
+assert(pcall(gameState.placeMark, { 1, 1 })) -- X
+assert(not gameState.isXsTurn)
+assert(gameState.xmarks[1] == 7)
+
+-- If board checking works properly, X should have taken the first board by now
+assert(gameState.xwon == 1)
+
+
+
+--- DISALLOW PLAYING ON BOARD 1
+--- GENERATE VALID MOVES WHEN BOARD 1 IS 'FORCED'
+--- CHECK IF O CAN WIN BOARDS
+--- CHECK GAME WIN STATE
+--- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
