@@ -198,6 +198,12 @@ for i = 8, 61 do
     end
 end
 
---- DISALLOW PLAYING ON BOARD 1
+--- Trying to place a mark on a board that's already been taken should raise an
+--- exception and not change the game state
+assert(not pcall(gameState.placeMark, { 1, 5 }))
+assert(gameState.isXsTurn)
+assert(gameState.xmarks[1] == 7)
+
+
 --- CHECK GAME WIN STATE
 --- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
