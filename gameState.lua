@@ -80,15 +80,15 @@ return function()
         assert(cell > 0 and cell <= 9)
 
         if #moveHistory ~= 0 then -- Every move after the first needs validation
-            local forcedBoard = moveHistory[#moveHistory][1]
+            local forcedBoard = moveHistory[#moveHistory][2]
             if self.getCellOwner(coords) then
-                error('That cell is unoccupied', 2)
+                error('That cell is unoccupied')
             elseif self.getBoardOwner(board) then
-                error('That board has already been won', 2)
+                error('That board has already been won')
             elseif
                 not self.getBoardOwner(forcedBoard) and board ~= forcedBoard
             then
-                error('Must play inside board #' .. forcedBoard, 2)
+                error('Must play inside board #' .. forcedBoard)
             end
         end
 
@@ -108,7 +108,7 @@ return function()
 
     ---Restore game state to what it was before the last move was played
     self.undoMove = function()
-        if #moveHistory == 0 then error('No moves to undo', 2) end
+        if #moveHistory == 0 then error('No moves to undo') end
 
         local move = table.remove(moveHistory)
         local board, cell = move[1], move[2]
