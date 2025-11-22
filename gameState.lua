@@ -30,13 +30,13 @@ return function()
         }
         -- stylua: ignore end
 
-        for idx = 1, 9 do
+        for board = 1, 9 do
             for _, mask in ipairs(masks) do
-                if self.omarks[idx] & mask == mask then
-                    self.owon = BU.setBit(self.owon, idx, 1)
+                if self.omarks[board] & mask == mask then
+                    self.owon = BU.setBit(self.owon, board, 1)
                     break
-                elseif self.xmarks[idx] & mask == mask then
-                    self.xwon = BU.setBit(self.xwon, idx, 1)
+                elseif self.xmarks[board] & mask == mask then
+                    self.xwon = BU.setBit(self.xwon, board, 1)
                     break
                 end
             end
