@@ -106,18 +106,17 @@ return function()
         checkBoards()
     end
 
-    ---Restore game state to what it was before the last move was played
+    ---Undo the last move made
     self.undoMove = function()
         if #moveHistory == 0 then error('No moves to undo') end
 
         local move = table.remove(moveHistory)
         local board, cell = move[1], move[2]
-        local owner = self.getCellOwner({ board, cell }) --This is unnecessary. Use isXsTurn.
 
-        if owner == 1 then -- Remove X mark
-            self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
-        elseif owner == 2 then -- Remove O mark
+        if self.isXsTurn then -- The last mark was placed by O
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
+        elseif not self.isXsTurn then -- The last mark was placed by X
+            self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
         end
 
         self.isXsTurn = not self.isXsTurn
