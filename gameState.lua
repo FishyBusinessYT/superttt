@@ -104,7 +104,7 @@ return function()
 
         local move = table.remove(moveHistory)
         local board, cell = move[1], move[2]
-        local owner = self.getCellOwner(board, cell)
+        local owner = self.getCellOwner({board, cell}) --This is unnecessary. Use isXsTurn.
 
         if owner == 1 then -- Remove X mark
             self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
@@ -124,7 +124,7 @@ return function()
 
         local function addEmptyCells(board)
             for cell = 1, 9 do
-                if not self.getCellOwner(board, cell) then
+                if not self.getCellOwner({board, cell}) then
                     table.insert(moves, { board, cell })
                 end
             end
