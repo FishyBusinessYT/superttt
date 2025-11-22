@@ -60,10 +60,10 @@ return function()
     end
 
     ---Check who's taken this cell.
-    ---@param coords [integer, integer]
+    ---@param cellPos [integer, integer]
     ---@return integer? owner 1 for X, 2 for O, nil for neither
-    self.getCellOwner = function(coords)
-        local board, cell = coords[1], coords[2]
+    self.getCellOwner = function(cellPos)
+        local board, cell = cellPos[1], cellPos[2]
         if BU.getBit(self.xmarks[board], cell) == 1 then
             return 1
         elseif BU.getBit(self.omarks[board], cell) == 1 then
@@ -73,15 +73,15 @@ return function()
 
     ---Place a mark on the specified cell. The cell must be unoccupied and its
     ---board must not be taken for this move to be allowed.
-    ---@param coords [integer, integer]
-    self.placeMark = function(coords)
-        local board, cell = coords[1], coords[2]
+    ---@param cellPos [integer, integer]
+    self.placeMark = function(cellPos)
+        local board, cell = cellPos[1], cellPos[2]
         assert(board > 0 and board <= 9)
         assert(cell > 0 and cell <= 9)
 
         if #moveHistory ~= 0 then -- Every move after the first needs validation
             local forcedBoard = moveHistory[#moveHistory][2]
-            if self.getCellOwner(coords) then
+            if self.getCellOwner(cellPos) then
                 error('That cell is unoccupied')
             elseif self.getBoardOwner(board) then
                 error('That board has already been won')
