@@ -30,13 +30,13 @@ return function()
         }
         -- stylua: ignore end
 
-        for idx = 1, 9 do
+        for board = 1, 9 do
             for _, mask in ipairs(masks) do
-                if self.omarks[idx] & mask == mask then
-                    self.owon = BU.setBit(self.owon, idx, 1)
+                if self.omarks[board] & mask == mask then
+                    self.owon = BU.setBit(self.owon, board, 1)
                     break
-                elseif self.xmarks[idx] & mask == mask then
-                    self.xwon = BU.setBit(self.xwon, idx, 1)
+                elseif self.xmarks[board] & mask == mask then
+                    self.xwon = BU.setBit(self.xwon, board, 1)
                     break
                 end
             end
@@ -48,9 +48,9 @@ return function()
         )
     end
 
-    ---Check who's won this board
-    ---@param board integer 1-9
-    ---@return integer? 1 for X, 2 for O, nil for neither
+    ---Check who's won this board.
+    ---@param board integer Must be any integer 1-9
+    ---@return integer? owner 1 for X, 2 for O, nil for neither
     self.getBoardOwner = function(board)
         if BU.getBit(self.xwon, board) == 1 then
             return 1
@@ -59,57 +59,64 @@ return function()
         end
     end
 
-    ---Check who's taken this cell
-    ---@param move [integer, integer]
-    ---@return integer? 1 for X, 2 for O, nil for neither
-    self.getCellOwner = function(move)
-        local board, cell = move[1], move[2]
-        if
-            BU.getBit(self.xmarks[board], cell) == 1
-            --or BU.getBit(self.xwon, board) == 1
-        then
+    ---Check who's taken this cell.
+    ---@param cellPos [integer, integer]
+    ---@return integer? owner 1 for X, 2 for O, nil for neither
+    self.getCellOwner = function(cellPos)
+        local board, cell = cellPos[1], cellPos[2]
+        if BU.getBit(self.xmarks[board], cell) == 1 then
             return 1
-        elseif
-            BU.getBit(self.omarks[board], cell) == 1
-            --or BU.getBit(self.owon, board) == 1
-        then
+        elseif BU.getBit(self.omarks[board], cell) == 1 then
             return 2
         end
     end
 
-    ---Place a mark on the specified cell
-    ---@param move [integer, integer]
-    self.placeMark = function(move)
-        local board, cell = move[1], move[2]
+    ---Place a mark on the specified cell. The cell must be unoccupied and its
+    ---board must not be taken for this move to be allowed.
+    ---@param cellPos [integer, integer]
+    self.placeMark = function(cellPos)
+        local board, cell = cellPos[1], cellPos[2]
+        assert(board > 0 and board <= 9)
+        assert(cell > 0 and cell <= 9)
 
-        if self.getCellOwner(move) or self.getBoardOwner(board) then
-            error('Illegal move made', 2)
+        if #moveHistory ~= 0 then -- Every move after the first needs validation
+            local forcedBoard = moveHistory[#moveHistory][2]
+            if self.getCellOwner(cellPos) then
+                error('That cell is unoccupied')
+            elseif self.getBoardOwner(board) then
+                error('That board has already been won')
+            elseif
+                not self.getBoardOwner(forcedBoard) and board ~= forcedBoard
+            then
+                error('Must play inside board #' .. forcedBoard)
+            end
         end
 
-        if self.isXsTurn then --Place X mark
+        if self.isXsTurn then
+            --Place X mark
             self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 1)
-        else --Place O mark
+        else
+            --Place O mark
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 1)
         end
 
         self.isXsTurn = not self.isXsTurn
-        table.insert(moveHistory, {board, cell})
+        table.insert(moveHistory, { board, cell })
 
         checkBoards()
     end
 
-    ---Restore game state to what it was before the last move was played
+    ---Undo the last move made
     self.undoMove = function()
-        if #moveHistory == 0 then error('No moves to undo', 2) end
+        if #moveHistory == 0 then error('No moves to undo') end
 
         local move = table.remove(moveHistory)
         local board, cell = move[1], move[2]
-        local owner = self.getCellOwner({board, cell}) --This is unnecessary. Use isXsTurn.
 
-        if owner == 1 then -- Remove X mark
-            self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
-        elseif owner == 2 then -- Remove O mark
+        if self.isXsTurn then -- The last mark was placed by O
             self.omarks[board] = BU.setBit(self.omarks[board], cell, 0)
+        elseif not self.isXsTurn then -- The last mark was placed by X
+            self.xmarks[board] = BU.setBit(self.xmarks[board], cell, 0)
         end
 
         self.isXsTurn = not self.isXsTurn
@@ -124,14 +131,14 @@ return function()
 
         local function addEmptyCells(board)
             for cell = 1, 9 do
-                if not self.getCellOwner({board, cell}) then
+                if not self.getCellOwner({ board, cell }) then
                     table.insert(moves, { board, cell })
                 end
             end
         end
 
         local lastMove = moveHistory[#moveHistory]
-        if lastMove and not self.getBoardOwner(lastMove[1]) then
+        if lastMove and not self.getBoardOwner(lastMove[2]) then
             addEmptyCells(moveHistory[#moveHistory][2])
             return moves
         end

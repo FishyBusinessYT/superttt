@@ -57,7 +57,7 @@ end
 -- Then again, making the same move twice should not be allowed either
 assert(not pcall(gameState.placeMark, { 1, 1 }))
 assert(not gameState.isXsTurn)
-assert(gameState.omarks[1] == 1)
+assert(gameState.omarks[1] == 0)
 
 --- Test move generation
 local legalMoves = gameState.getLegalMoves()
@@ -207,3 +207,4 @@ assert(gameState.xmarks[1] == 7)
 
 --- CHECK GAME WIN STATE
 --- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
+--- CHECK MOVES IN BOARDS/CELLS OUTSIDE OF RANGE
