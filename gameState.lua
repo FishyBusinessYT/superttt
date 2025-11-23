@@ -138,7 +138,7 @@ return function()
         end
 
         local lastMove = moveHistory[#moveHistory]
-        if lastMove and not self.getBoardOwner(lastMove[1]) then
+        if lastMove and not self.getBoardOwner(lastMove[2]) then
             addEmptyCells(moveHistory[#moveHistory][2])
             return moves
         end
