@@ -16,22 +16,22 @@ end
 --- Test initial state
 local function testInitialState()
     -- X should be the first player to play
-    ensure(gameState.isXsTurn, true, 'initialState.isXsTurn')
+    ensure(gameState.isXsTurn, true, 'X goes first')
 
     -- Neither player should have won any board
-    ensure(gameState.xwon, 0, 'initialState.xwon')
-    ensure(gameState.owon, 0, 'initialState.owon')
+    ensure(gameState.xwon, 0, 'X owns no boards initially')
+    ensure(gameState.owon, 0, 'O owns no boards initially')
 
     -- Or placed any marks, for that matter
     for i = 1, 9 do
-        ensure(gameState.xmarks[i], 0, 'initialState.xmarks[' .. i .. ']')
-        ensure(gameState.omarks[i], 0, 'initialState.omarks[' .. i .. ']')
+        ensure(gameState.xmarks[i], 0, 'X has no marks initially (' .. i .. ')')
+        ensure(gameState.omarks[i], 0, 'O has no marks initially (' .. i .. ')')
     end
 
     -- getLegalMoves should return a list of 9*9 = 81 legal moves right at the
     -- start, as X can pick any of the board's cells as their first move.
     local legalMoves = gameState.getLegalMoves()
-    ensure(#legalMoves, 81, 'initialState.movegen')
+    ensure(#legalMoves, 81, 'Move generation initially generates 81 moves')
 
     -- Verify every move is present and in the correct order, starting from
     -- {1, 1} up to {9, 9}
@@ -44,8 +44,8 @@ local function testInitialState()
             cellCounter = 1
         end
 
-        ensure(move[1], boardCounter, 'initialState.movegen')
-        ensure(move[2], cellCounter, 'initialState.movegen')
+        ensure(move[1], boardCounter, 'Moves have the correct board value')
+        ensure(move[2], cellCounter, 'Moves have the corect cell value')
 
         cellCounter = cellCounter + 1
     end
@@ -55,17 +55,25 @@ testInitialState()
 
 --- Test moving as X
 -- First mark can be placed anywhere
-ensure(pcall(gameState.placeMark, {1, 1}), true, 'moves.first')
+ensure(pcall(gameState.placeMark, { 1, 1 }), true, 'placeMark can be called')
 
-assert(not gameState.isXsTurn)
-assert(gameState.xmarks[1] == 1)
+ensure(gameState.isXsTurn, false, 'Turn changes after placing a mark')
+ensure(gameState.xmarks[1], 1, 'The mark is saved')
 
--- Trying to place a mark on any board other than 5 should raise an exception
+-- Trying to place a mark on any board other than 1 should raise an exception
 -- and not change the game state
 for i = 2, 9 do
-    assert(not pcall(gameState.placeMark, { i, 1 }))
-    assert(not gameState.isXsTurn)
-    assert(gameState.omarks[i] == 0)
+    ensure(
+        pcall(gameState.placeMark, { i, 1 }),
+        false,
+        'placeMark disallows playing on boards other than 1'
+    )
+    ensure(
+        gameState.isXsTurn,
+        false,
+        'Turn does not change after a failed move'
+    )
+    ensure(gameState.omarks[i], 0, 'Mark is not saved after a failed move')
 end
 
 -- Then again, making the same move twice should not be allowed either
