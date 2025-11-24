@@ -1,24 +1,37 @@
 local gameState = require('gameState')()
 
+---Just a more descriptive assert function
+---@param value any The value being tested
+---@param expected any The value it's being compared against
+---@param name string The test name
+local function ensure(value, expected, name)
+    print('Running assertion: ' .. name)
+    print('Value: ' .. tostring(value))
+    print('Expected: ' .. tostring(expected))
+
+    assert(value == expected)
+    print('Success! \n\n')
+end
+
 --- Test initial state
 local function testInitialState()
     -- X should be the first player to play
-    assert(gameState.isXsTurn)
+    ensure(gameState.isXsTurn, true, 'initialState.isXsTurn')
 
     -- Neither player should have won any board
-    assert(gameState.xwon == 0)
-    assert(gameState.owon == 0)
+    ensure(gameState.xwon, 0, 'initialState.xwon')
+    ensure(gameState.owon, 0, 'initialState.owon')
 
     -- Or placed any marks, for that matter
     for i = 1, 9 do
-        assert(gameState.xmarks[i] == 0)
-        assert(gameState.omarks[i] == 0)
+        ensure(gameState.xmarks[i], 0, 'initialState.xmarks[' .. i .. ']')
+        ensure(gameState.omarks[i], 0, 'initialState.omarks[' .. i .. ']')
     end
 
     -- getLegalMoves should return a list of 9*9 = 81 legal moves right at the
     -- start, as X can pick any of the board's cells as their first move.
     local legalMoves = gameState.getLegalMoves()
-    assert(#legalMoves == 81)
+    ensure(#legalMoves, 81, 'initialState.movegen')
 
     -- Verify every move is present and in the correct order, starting from
     -- {1, 1} up to {9, 9}
@@ -31,7 +44,8 @@ local function testInitialState()
             cellCounter = 1
         end
 
-        assert(move[1] == boardCounter and move[2] == cellCounter)
+        ensure(move[1], boardCounter, 'initialState.movegen')
+        ensure(move[2], cellCounter, 'initialState.movegen')
 
         cellCounter = cellCounter + 1
     end
@@ -41,7 +55,7 @@ testInitialState()
 
 --- Test moving as X
 -- First mark can be placed anywhere
-assert(pcall(gameState.placeMark, { 1, 1 }))
+ensure(pcall(gameState.placeMark, {1, 1}), true, 'moves.first')
 
 assert(not gameState.isXsTurn)
 assert(gameState.xmarks[1] == 1)
@@ -213,7 +227,6 @@ end
 assert(not pcall(gameState.placeMark, { 1, 5 }))
 assert(gameState.isXsTurn)
 assert(gameState.xmarks[1] == 7)
-
 
 --- CHECK GAME WIN STATE
 --- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
