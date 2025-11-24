@@ -76,6 +76,16 @@ assert(pcall(gameState.placeMark, { 1, 2 }))
 assert(gameState.isXsTurn)
 assert(gameState.omarks[1] == 2)
 
+--- Test move generation again
+local legalMoves2 = gameState.getLegalMoves()
+
+-- The list should only contain all 9 cells of board 2.
+assert(#legalMoves2 == 9)
+for cell, move in ipairs(legalMoves2) do
+    assert(move[1] == 2)
+    assert(move[2] == cell)
+end
+
 --- Test move undo
 -- Logically, undoing the first two moves should fully restore the game state.
 gameState.undoMove()
@@ -172,15 +182,15 @@ to the order in which they were placed:
 -- The board that would be forced (board 2) is also already won by O. Thus, X
 -- should be able to place a mark on any board, as long as that board is not
 -- won by either player and move generation should reflect that.
-local legalMoves2 = gameState.getLegalMoves()
+local legalMoves3 = gameState.getLegalMoves()
 
 -- The list should contain the other 7 cells on board 3, and every cell on
 -- boards 4-9. That amounts to 6*9+7 = 61 possible moves.
-assert(#legalMoves2 == 61)
+assert(#legalMoves3 == 61)
 
 -- Make sure the first seven moves on the list are cells 3-9 on board 3
 for i = 1, 7 do
-    local move = legalMoves2[i]
+    local move = legalMoves3[i]
     assert(move[1] == 3)
     assert(move[2] == i + 2)
 end
@@ -188,7 +198,7 @@ end
 -- Then iterate through the rest to make sure that they're all there.
 local cell, board = 1, 4
 for i = 8, 61 do
-    local move = legalMoves2[i]
+    local move = legalMoves3[i]
     assert(move[1] == board)
     assert(move[2] == cell)
     cell = cell + 1
