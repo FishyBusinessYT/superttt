@@ -77,31 +77,53 @@ for i = 2, 9 do
 end
 
 -- Then again, making the same move twice should not be allowed either
-assert(not pcall(gameState.placeMark, { 1, 1 }))
-assert(not gameState.isXsTurn)
-assert(gameState.omarks[1] == 0)
+ensure(
+    pcall(gameState.placeMark, { 1, 1 }),
+    false,
+    'placeMark disallows duplicate moves'
+)
+ensure(gameState.isXsTurn, false, 'Turn does not change after a failed move')
+ensure(gameState.omarks[1], 0, 'Mark is not saved after a failed move')
 
 --- Test move generation
 local legalMoves = gameState.getLegalMoves()
 
 -- The list should only contain the other 8 cells on board 1.
-assert(#legalMoves == 8)
+ensure(
+    #legalMoves,
+    8,
+    'Board-forced move generation returns the other 8 cells on board 1'
+)
+
 for idx, move in ipairs(legalMoves) do
     local cell = idx + 1
-    assert(move[1] == 1)
-    assert(move[2] == cell)
+    ensure(move[1], 1, 'All moves in the list belong to board 1')
+    ensure(move[2], cell, 'All cells from board 1 are included in the list')
 end
 
 --- Test moving as O
--- Only placing a mark on board 1 should be allowed
-assert(pcall(gameState.placeMark, { 1, 2 }))
-assert(gameState.isXsTurn)
-assert(gameState.omarks[1] == 2)
+-- Should be able to place marks on board 1
+ensure(
+    pcall(gameState.placeMark, { 1, 2 }),
+    true,
+    'placeMark allows playing on forced board'
+)
+ensure(gameState.isXsTurn, true, 'Turn changes after successful placeMark call')
+ensure(
+    gameState.omarks[1],
+    2,
+    'O mark is saved after successful placeMark call'
+)
 
 --- Test move generation again
 local legalMoves2 = gameState.getLegalMoves()
 
 -- The list should only contain all 9 cells of board 2.
+ensure(
+    #legalMoves2,
+    9,
+    'Board-forced move generation returns the other 9 cells on board 9'
+)
 assert(#legalMoves2 == 9)
 for cell, move in ipairs(legalMoves2) do
     assert(move[1] == 2)
