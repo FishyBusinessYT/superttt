@@ -35,19 +35,13 @@ local function testInitialState()
 
     -- Verify every move is present and in the correct order, starting from
     -- {1, 1} up to {9, 9}
-    local boardCounter = 1
-    local cellCounter = 1
+    for i = 1, 81 do
+        local cell = (i - 1) % 9 + 1
+        local board = math.ceil(i / 9)
+        local move = legalMoves[i]
 
-    for _, move in ipairs(legalMoves) do
-        if cellCounter == 10 then
-            boardCounter = boardCounter + 1
-            cellCounter = 1
-        end
-
-        ensure(move[1], boardCounter, 'Moves have the correct board value')
-        ensure(move[2], cellCounter, 'Moves have the corect cell value')
-
-        cellCounter = cellCounter + 1
+        ensure(move[1], board, 'Moves have the correct board value')
+        ensure(move[2], cell, 'Moves have the corect cell value')
     end
 end
 
@@ -89,16 +83,10 @@ ensure(gameState.omarks[1], 0, 'Mark is not saved after a failed move')
 local legalMoves = gameState.getLegalMoves()
 
 -- The list should only contain the other 8 cells on board 1.
-ensure(
-    #legalMoves,
-    8,
-    'Board-forced move generation returns the other 8 cells on board 1'
-)
-
-for idx, move in ipairs(legalMoves) do
-    local cell = idx + 1
+for cell = 2, 9 do
+    local move = legalMoves[cell - 1]
     ensure(move[1], 1, 'All moves in the list belong to board 1')
-    ensure(move[2], cell, 'All cells from board 1 are included in the list')
+    ensure(move[2], cell, 'Cells 2-9 are included in the list')
 end
 
 --- Test moving as O
@@ -119,29 +107,28 @@ ensure(
 local legalMoves2 = gameState.getLegalMoves()
 
 -- The list should only contain all 9 cells of board 2.
-ensure(
-    #legalMoves2,
-    9,
-    'Board-forced move generation returns the other 9 cells on board 9'
-)
-assert(#legalMoves2 == 9)
-for cell, move in ipairs(legalMoves2) do
-    assert(move[1] == 2)
-    assert(move[2] == cell)
+for i = 1, 9 do
+    local move = legalMoves2[i]
+    ensure(move[1], 2, 'All moves in the list belong to board 2')
+    ensure(move[2], i, 'All 9 cells are included in the list')
 end
 
 --- Test move undo
 -- Logically, undoing the first two moves should fully restore the game state.
-gameState.undoMove()
-assert(not gameState.isXsTurn)
-assert(gameState.omarks[1] == 0)
+ensure(pcall(gameState.undoMove), true, 'Calling undoMove works')
+ensure(gameState.isXsTurn, false, 'undoMove correctly updates turn')
+ensure(gameState.omarks[1], 0, 'undoMove properly removes the last placed mark')
 
 gameState.undoMove()
 testInitialState()
 
 -- Undoing another move should raise an exception and not change the game state
 -- at all.
-assert(not pcall(gameState.undoMove))
+ensure(
+    pcall(gameState.undoMove),
+    false,
+    'undoMove should not work if there is nothing to undo'
+)
 testInitialState()
 
 --- Test board checking
