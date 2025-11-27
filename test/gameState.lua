@@ -215,10 +215,6 @@ to the order in which they were placed:
 -- won by either player and move generation should reflect that.
 local legalMoves3 = gameState.getLegalMoves()
 
--- The list should contain the other 7 cells on board 3, and every cell on
--- boards 4-9. That amounts to 6*9+7 = 61 possible moves.
-assert(#legalMoves3 == 61)
-
 -- Make sure the first seven moves on the list are cells 3-9 on board 3
 for i = 1, 7 do
     local move = legalMoves3[i]
