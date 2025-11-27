@@ -218,16 +218,17 @@ local legalMoves3 = gameState.getLegalMoves()
 -- Make sure the first seven moves on the list are cells 3-9 on board 3
 for i = 1, 7 do
     local move = legalMoves3[i]
-    assert(move[1] == 3)
-    assert(move[2] == i + 2)
+    ensure(move[1], 3, 'The first 7 legal moves should belong to board 3')
+    ensure(move[2], i + 2, 'These should include cells 3-9')
 end
 
 -- Then iterate through the rest to make sure that they're all there.
 local cell, board = 1, 4
 for i = 8, 61 do
     local move = legalMoves3[i]
-    assert(move[1] == board)
-    assert(move[2] == cell)
+    ensure(move[1], board, 'Moves have the correct board value')
+    ensure(move[2], cell, 'Moves have the correct cell value')
+
     cell = cell + 1
     if cell == 10 then
         cell = 1
@@ -237,9 +238,13 @@ end
 
 --- Trying to place a mark on a board that's already been taken should raise an
 --- exception and not change the game state
-assert(not pcall(gameState.placeMark, { 1, 5 }))
-assert(gameState.isXsTurn)
-assert(gameState.xmarks[1] == 7)
+ensure(
+    pcall(gameState.placeMark, { 1, 5 }),
+    false,
+    'Ensure placeMark forbids placing marks on taken boards'
+)
+ensure(gameState.isXsTurn, true, 'Verify turn does not change')
+ensure(gameState.xmarks[1], 7, 'Verify mark is not placed')
 
 --- CHECK GAME WIN STATE
 --- CHECK GAME DRAWS (HIGHLY UNLIKELY THOUGH)
