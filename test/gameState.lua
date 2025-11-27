@@ -133,44 +133,44 @@ testInitialState()
 
 --- Test board checking
 -- Let's have X take the first row of cells of the first board
-assert(pcall(gameState.placeMark, { 1, 2 })) -- X1
-assert(not gameState.isXsTurn)
-assert(gameState.xmarks[1] == 2)
+ensure(pcall(gameState.placeMark, { 1, 2 }), true, 'Place X mark on b1c2')
+ensure(gameState.isXsTurn, false, 'Verify turn change')
+ensure(gameState.xmarks[1], 2, 'Verify mark is present on b1c2')
 
-assert(pcall(gameState.placeMark, { 2, 1 })) -- O2
-assert(gameState.isXsTurn)
-assert(gameState.omarks[2] == 1)
+ensure(pcall(gameState.placeMark, { 2, 1 }), true, 'Place O mark on b2c1') -- O2
+ensure(gameState.isXsTurn, true, 'Verify turn change')
+ensure(gameState.omarks[2], 1, 'Verify mark is present on b2c1')
 
-assert(pcall(gameState.placeMark, { 1, 3 })) -- X3
-assert(not gameState.isXsTurn)
-assert(gameState.xmarks[1] == 6)
+ensure(pcall(gameState.placeMark, { 1, 3 }), true, 'Place X mark on b1c3') -- X3
+ensure(gameState.isXsTurn, false, 'Verify turn change')
+ensure(gameState.xmarks[1], 6, 'Verify mark is present on b1c3')
 
-assert(pcall(gameState.placeMark, { 3, 1 })) -- O4
-assert(gameState.isXsTurn)
-assert(gameState.omarks[3] == 1)
+ensure(pcall(gameState.placeMark, { 3, 1 }), true, 'Place O mark on b3c1') -- O4
+ensure(gameState.isXsTurn, true, 'Verify turn change')
+ensure(gameState.omarks[3], 1, 'Verify mark is present on b3c1')
 
-assert(pcall(gameState.placeMark, { 1, 1 })) -- X5
-assert(not gameState.isXsTurn)
-assert(gameState.xmarks[1] == 7)
+ensure(pcall(gameState.placeMark, { 1, 1 }), true, 'Place X mark on b1c1') -- X5
+ensure(gameState.isXsTurn, false, 'Verify turn change')
+ensure(gameState.xmarks[1], 7, 'Verify mark is present on b1c1')
 
 -- If board checking works properly, X should have taken the first board by now
-assert(gameState.xwon == 1)
+ensure(gameState.xwon, 1, 'Board checking marks board 1 as taken by X')
 
 -- Now let's have O take the top-center board
-assert(pcall(gameState.placeMark, { 2, 3 })) -- O6
-assert(gameState.isXsTurn)
-assert(gameState.omarks[2] == 5)
+ensure(pcall(gameState.placeMark, { 2, 3 }), true, 'Place O mark on b2c3') -- O6
+ensure(gameState.isXsTurn, true, 'Verify turn change')
+ensure(gameState.omarks[2], 5, 'Verify mark is present on b2c3')
 
-assert(pcall(gameState.placeMark, { 3, 2 })) -- X7
-assert(not gameState.isXsTurn)
-assert(gameState.xmarks[3] == 2)
+ensure(pcall(gameState.placeMark, { 3, 2 }), true, 'Place X mark on b3c2') -- X7
+ensure(gameState.isXsTurn, false, 'Verify turn change')
+ensure(gameState.xmarks[3], 2, 'Verify mark is present on b3c2')
 
-assert(pcall(gameState.placeMark, { 2, 2 })) -- O8
-assert(gameState.isXsTurn)
-assert(gameState.omarks[2] == 7)
+ensure(pcall(gameState.placeMark, { 2, 2 }), true, 'Place O mark on b2c2') -- O8
+ensure(gameState.isXsTurn, true, 'Verify turn change')
+ensure(gameState.omarks[2], 7, 'Verify mark is present on b2c2')
 
 -- If board checks work properly, O should have now taken the second board
-assert(gameState.owon == 2)
+ensure(gameState.owon, 2, 'Board checking marks board 2 as taken by O')
 
 --[[
 This is what the board looks like right now. Every mark is labeled according
