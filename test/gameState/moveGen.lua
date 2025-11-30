@@ -42,19 +42,50 @@ local function testMoveGen(fb, fc, lb, lc, legalMoves)
     ensure(#missingMove, 0, 'All moves are present and in the correct order')
 end
 
-
-
 -- getLegalMoves should return a list of all 81 cells in the board at the start
 testMoveGen(1, 1, 9, 9, gameState.getLegalMoves())
 
 -- After placing a mark on b1c1, the list should only contain the other 8 cells
 -- from that board.
-gameState.placeMark({1, 1})
+gameState.placeMark({ 1, 1 })
 testMoveGen(1, 2, 1, 9, gameState.getLegalMoves())
 
+-- Undo the move and test previous case again
+gameState.undoMove()
+testMoveGen(1, 1, 9, 9, gameState.getLegalMoves())
+gameState.placeMark({ 1, 1 })
 
--- When they're different
--- When a board is forced by lc
--- When the forced board is already taken
--- When empty cells are not continuous
--- Every case works even after making a move and undoing it
+-- Now, the list should only contain all 9 cells of board 2.
+gameState.placeMark({ 1, 2 })
+testMoveGen(2, 1, 2, 9, gameState.getLegalMoves())
+
+--Undo and retest
+gameState.undoMove()
+testMoveGen(1, 2, 1, 9, gameState.getLegalMoves())
+
+-- Let's have board 1 be taken by X
+gameState.undoMove()
+
+gameState.placeMark({ 1, 2 }) -- X
+gameState.placeMark({ 2, 1 }) -- O
+gameState.placeMark({ 1, 3 }) -- X
+gameState.placeMark({ 3, 1 }) -- O
+gameState.placeMark({ 1, 1 }) -- X takes board 1
+
+-- Now, the board that would be forced is also taken, so O should be free
+-- to place a mark wherever they like:
+-- gameState.placeMark({ 2, 3 })
+
+-- In this case, the legal moves are not continuous, so we need 2 tests
+-- First, cells 2-9 of board 2:
+testMoveGen(2, 2, 2, 9, {table.unpack(gameState.getLegalMoves(), 1, 8)})
+
+-- Then, every other cell from b3c2 to b9c9:
+testMoveGen(3, 2, 9, 9, {table.unpack(gameState.getLegalMoves(), 9)})
+
+--Now we'll make a move, undo it and retest
+gameState.placeMark({ 2, 3 })
+gameState.undoMove()
+
+testMoveGen(2, 2, 2, 9, {table.unpack(gameState.getLegalMoves(), 1, 8)})
+testMoveGen(3, 2, 9, 9, {table.unpack(gameState.getLegalMoves(), 9)})
