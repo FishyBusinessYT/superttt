@@ -1,8 +1,9 @@
+-- This test assumes GameState.getCellOwner works as it should, and that the
+-- initial state is correct
+print('Testing GameState.placeMark and GameState.undoMove')
+
 local gameState = require('gameState')()
 local ensure = require('test.ensure')
-
--- This test assumes GameState.getCellOwner works properly
-print('Testing GameState.placeMark and GameState.undoMove')
 
 ---One place to test placeMark under different circumstances
 ---@param board integer

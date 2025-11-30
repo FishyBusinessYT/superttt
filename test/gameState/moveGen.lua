@@ -1,4 +1,5 @@
---- This test assumes GameState.placeMark and GameState.undoMove work properly
+--- This test assumes GameState.placeMark and GameState.undoMove work as they
+--- should, and that the initial state is correct
 print('Testing GameState.getLegalMoves')
 
 local gameState = require('gameState')()
