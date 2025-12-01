@@ -78,14 +78,14 @@ gameState.placeMark({ 1, 1 }) -- X takes board 1
 
 -- In this case, the legal moves are not continuous, so we need 2 tests
 -- First, cells 2-9 of board 2:
-testMoveGen(2, 2, 2, 9, {table.unpack(gameState.getLegalMoves(), 1, 8)})
+testMoveGen(2, 2, 2, 9, { table.unpack(gameState.getLegalMoves(), 1, 8) })
 
 -- Then, every other cell from b3c2 to b9c9:
-testMoveGen(3, 2, 9, 9, {table.unpack(gameState.getLegalMoves(), 9)})
+testMoveGen(3, 2, 9, 9, { table.unpack(gameState.getLegalMoves(), 9) })
 
 --Now we'll make a move, undo it and retest
 gameState.placeMark({ 2, 3 })
 gameState.undoMove()
 
-testMoveGen(2, 2, 2, 9, {table.unpack(gameState.getLegalMoves(), 1, 8)})
-testMoveGen(3, 2, 9, 9, {table.unpack(gameState.getLegalMoves(), 9)})
+testMoveGen(2, 2, 2, 9, { table.unpack(gameState.getLegalMoves(), 1, 8) })
+testMoveGen(3, 2, 9, 9, { table.unpack(gameState.getLegalMoves(), 9) })
