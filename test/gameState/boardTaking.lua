@@ -17,21 +17,37 @@ ensure(
     'Board checking marks board 1 as taken by X'
 )
 
--- Undo every move
-for _ = 1, 5 do
+-- Now let's see if it properly updates after the move is undone
+gameState.undoMove()
+ensure(
+    gameState.getBoardOwner(1),
+    nil,
+    'Board checking updates correctly after undone moves (1)'
+)
+
+-- Undo the rest of the moves
+for _ = 1, 4 do
     gameState.undoMove()
 end
 
---Now let's have O take board 2
-gameState.placeMark({4, 2}) -- X
-gameState.placeMark({2, 1}) -- O
-gameState.placeMark({1, 2}) -- X
-gameState.placeMark({2, 3}) -- O
-gameState.placeMark({3, 2}) -- X
-gameState.placeMark({2, 2}) -- O Takes board 2
+-- Now let's have O take board 2
+gameState.placeMark({ 4, 2 }) -- X
+gameState.placeMark({ 2, 1 }) -- O
+gameState.placeMark({ 1, 2 }) -- X
+gameState.placeMark({ 2, 3 }) -- O
+gameState.placeMark({ 3, 2 }) -- X
+gameState.placeMark({ 2, 2 }) -- O Takes board 2
 
 ensure(
     gameState.getBoardOwner(2),
     2,
     'Board checking marks board 2 as taken by O'
+)
+
+-- Now let's see if it properly updates after the move is undone
+gameState.undoMove()
+ensure(
+    gameState.getBoardOwner(1),
+    nil,
+    'Board checking updates correctly after undone moves (2)'
 )
