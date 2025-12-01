@@ -48,7 +48,27 @@ local function testMove(board, cell, isXMark, shouldWork)
     end
 end
 
+---One place to test undoMove without repeating code over and over
+---@param board integer
+---@param cell integer
+local function testUndo(board, cell)
+    local wasXsTurn = gameState.isXsTurn
+
+    ensure(pcall(gameState.undoMove), true, 'Ensure undoMove call succeeds')
+
+    ensure(gameState.isXsTurn, not wasXsTurn, 'Ensure undoMove updates turn')
+    ensure(
+        gameState.getCellOwner({ board or 1, cell or 1 }),
+        nil,
+        'Ensure undoMove properly removes the last placed mark'
+    )
+end
+
 -- First mark (X's) can be placed anywhere
+testMove(1, 1, true, true)
+
+-- Undo and redo the first move
+testUndo(1, 1)
 testMove(1, 1, true, true)
 
 -- placeMark should disallow playing on any board other than b1,
@@ -62,3 +82,18 @@ testMove(1, 1, false, false)
 
 -- O should be able to place a mark on board 1
 testMove(1, 2, false, true)
+
+-- Undo the move and redo previous tests
+testUndo(1, 2)
+
+for i = 2, 9 do
+    testMove(i, 1, false, false)
+end
+testMove(1, 1, false, false)
+testMove(1, 2, false, true)
+
+--- Testing placeMark under taken board conditions requires testing of board checking
+--- Ensure placeMark can't place marks in taken boards
+--- Ensure placeMark ignores forced board if it's taken
+--- Test undoing *back into* a taken forced board state
+--- Ensure undo updates board owners and win states?
