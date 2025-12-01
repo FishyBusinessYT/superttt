@@ -63,6 +63,12 @@ local function testUndo(board, cell)
     )
 end
 
+-- Only accept numbers between 1 and 9, including both end points
+testMove(0, 0, true, false)
+testMove(10, 0, true, false)
+testMove(0, 10, true, false)
+testMove(10, 10, true, false)
+
 -- First mark (X's) can be placed anywhere
 testMove(1, 1, true, true)
 
@@ -90,9 +96,3 @@ for i = 2, 9 do
 end
 testMove(1, 1, false, false)
 testMove(1, 2, false, true)
-
---- Testing placeMark under taken board conditions requires testing of board checking
---- Ensure placeMark can't place marks in taken boards
---- Ensure placeMark ignores forced board if it's taken
---- Test undoing *back into* a taken forced board state
---- Ensure undo updates board owners and win states?
