@@ -1,5 +1,4 @@
--- This test assumes GameState.getCellOwner works as it should, and that the
--- initial state is correct
+--- Test #2
 print('Testing GameState.placeMark and GameState.undoMove')
 
 local gameState = require('gameState')()

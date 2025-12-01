@@ -1,4 +1,4 @@
---- This test depends on no other test
+--- Test #1
 print('Testing the GameState\'s initial state and getter methods')
 
 local gameState = require('gameState')()
