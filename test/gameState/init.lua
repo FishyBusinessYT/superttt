@@ -1,0 +1,6 @@
+require('test.gameState.getters')
+require('test.gameState.initialState')
+require('test.gameState.moves')
+require('test.gameState.boardTaking')
+require('test.gameState.moves2')
+require('test.gameState.moveGen')
