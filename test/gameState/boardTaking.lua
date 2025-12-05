@@ -1,4 +1,3 @@
---- Test #3
 print('Testing board taking')
 
 local gameState = require('gameState')()

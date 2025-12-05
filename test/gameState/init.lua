@@ -1,3 +1,4 @@
+require('test.gameState.getters')
 require('test.gameState.initialState')
 require('test.gameState.moves')
 require('test.gameState.boardTaking')

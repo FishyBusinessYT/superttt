@@ -1,5 +1,4 @@
---- Test #1
-print('Testing the GameState\'s initial state and getter methods')
+print('Testing the GameState\'s initial state')
 
 local gameState = require('gameState')()
 local ensure = require('test.ensure')

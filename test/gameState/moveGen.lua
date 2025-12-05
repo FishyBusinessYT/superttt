@@ -1,4 +1,3 @@
---- Test #5
 print('Testing GameState.getLegalMoves')
 
 local gameState = require('gameState')()

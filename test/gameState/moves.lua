@@ -1,4 +1,3 @@
---- Test #2
 print('Testing GameState.placeMark and GameState.undoMove')
 
 local gameState = require('gameState')()
