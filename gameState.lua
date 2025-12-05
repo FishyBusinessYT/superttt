@@ -8,6 +8,7 @@ return function()
     ---@field xwon integer
     ---@field owon integer
     ---@field isXsTurn boolean
+    ---@field winner integer? 1 for X, 2 for O
     local self = {}
 
     self.xmarks = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -15,12 +16,14 @@ return function()
     self.xwon = 0
     self.owon = 0
     self.isXsTurn = true
+    self.winner = nil
 
     local moveHistory = {}
 
     local checkBoards = function()
         self.owon = 0
         self.xwon = 0
+        self.winner = nil
 
         -- stylua: ignore start
         local masks = {
@@ -46,6 +49,14 @@ return function()
             self.owon & self.xwon == 0,
             'The same board has somehow been won by both players'
         )
+
+        for _, mask in ipairs(masks) do
+            if self.owon & mask == mask then
+                self.winner = 2
+            elseif self.xwon & mask == mask then
+                self.winner = 1
+            end
+        end
     end
 
     ---Check who's won this board.
@@ -86,6 +97,7 @@ return function()
         local board, cell = cellPos[1], cellPos[2]
         assert(board > 0 and board <= 9)
         assert(cell > 0 and cell <= 9)
+        assert(not self.winner)
 
         if #moveHistory ~= 0 then -- Every move after the first needs validation
             local forcedBoard = moveHistory[#moveHistory][2]
@@ -136,6 +148,8 @@ return function()
     ---@return table moves List of valid moves
     self.getLegalMoves = function()
         local moves = {}
+
+        if self.winner then return moves end
 
         local function addEmptyCells(board)
             for cell = 1, 9 do
