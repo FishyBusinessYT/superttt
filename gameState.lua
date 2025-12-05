@@ -52,6 +52,10 @@ return function()
     ---@param board integer Must be any integer 1-9
     ---@return integer? owner 1 for X, 2 for O, nil for neither
     self.getBoardOwner = function(board)
+        if board < 1 or board > 9 then
+            error('Board value must be between 1 and 9')
+        end
+
         if BU.getBit(self.xwon, board) == 1 then
             return 1
         elseif BU.getBit(self.owon, board) == 1 then
@@ -64,6 +68,10 @@ return function()
     ---@return integer? owner 1 for X, 2 for O, nil for neither
     self.getCellOwner = function(cellPos)
         local board, cell = cellPos[1], cellPos[2]
+        if board < 1 or board > 9 or cell < 1 or cell > 9 then
+            error('Board and cell values must be between 1 and 9')
+        end
+
         if BU.getBit(self.xmarks[board], cell) == 1 then
             return 1
         elseif BU.getBit(self.omarks[board], cell) == 1 then

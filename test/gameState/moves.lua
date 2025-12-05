@@ -20,12 +20,8 @@ local function testMove(board, cell, isXMark, shouldWork)
         .. cellPosStr
     ensureMsg = ensureMsg .. (shouldWork and ' succeeds' or ' fails')
 
-    -- Needs to be stored before calling placeMark. See the else block below.
-    local prevCellOwner = gameState.getCellOwner({ board, cell })
-
-    ensure(pcall(gameState.placeMark, { board, cell }), shouldWork, ensureMsg)
-
     if shouldWork then
+        ensure(pcall(gameState.placeMark, { board, cell }), true, ensureMsg)
         ensure(gameState.isXsTurn, not isXMark, 'Verify turn change')
 
         ensure(
@@ -33,11 +29,20 @@ local function testMove(board, cell, isXMark, shouldWork)
             isXMark and 1 or 2,
             'Verify mark is saved'
         )
-    else
-        ensure(gameState.isXsTurn, isXMark, 'Verify turn does not change')
+        return
+    end
 
-        -- The actual cell owner can be any of { 1, 2, nil } as long as that's
-        -- the value it held before calling placeMark.
+    local isOutOfRange = board > 9 or cell > 9 or board < 1 or cell < 1
+    local prevCellOwner
+
+    if not isOutOfRange then
+        prevCellOwner = gameState.getCellOwner({ board, cell })
+    end
+
+    ensure(pcall(gameState.placeMark, { board, cell }), false, ensureMsg)
+    ensure(gameState.isXsTurn, isXMark, 'Verify turn does not change')
+
+    if not isOutOfRange then
         ensure(
             prevCellOwner,
             gameState.getCellOwner({ board, cell }),

@@ -13,12 +13,9 @@ for b = 1, 9 do
         )
     end
     ensure(
-        pcall(
-            gameState.getBoardOwner,
-            b,
-            true,
-            'GetBoardOwner accepts all 9 boards'
-        )
+        pcall(gameState.getBoardOwner, b),
+        true,
+        'GetBoardOwner accepts all 9 boards'
     )
 end
 

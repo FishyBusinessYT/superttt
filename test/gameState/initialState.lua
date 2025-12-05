@@ -7,6 +7,7 @@ local ensure = require('test.ensure')
 ensure(gameState.isXsTurn, true, 'X goes first')
 
 -- Neither player should have won any board
+print('Test: No board or cell is taken')
 for b = 1, 9 do
     if gameState.getBoardOwner(b) ~= nil then
         error('Board number ' .. b .. ' is taken!')
@@ -19,3 +20,4 @@ for b = 1, 9 do
         end
     end
 end
+print('Success!')
