@@ -2,13 +2,13 @@ local BU = require('binUtils')
 
 ---@return GameState
 return function()
-    ---@class GameState
-    ---@field xmarks integer[]
-    ---@field omarks integer[]
-    ---@field xwon integer
-    ---@field owon integer
-    ---@field isXsTurn boolean
-    ---@field winner integer? 1 for X, 2 for O
+    ---@class GameState Represents a SuperTicTacToe game state
+    ---@field xmarks integer[] A table of binary strings storing all of X's marks
+    ---@field omarks integer[] A table of binary strings storing all of O's marks
+    ---@field xwon integer A binary string storing the boards X has won
+    ---@field owon integer A binary string storing the boards O has won
+    ---@field isXsTurn boolean True when it's X's turn to play, false when it's O's 
+    ---@field winner integer? 1 for X, 2 for O, and nil for neither
     local self = {}
 
     self.xmarks = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -20,6 +20,7 @@ return function()
 
     local moveHistory = {}
 
+    ---Recheck all board owners and possible winner as well
     local checkBoards = function()
         self.owon = 0
         self.xwon = 0
@@ -145,7 +146,7 @@ return function()
     end
 
     ---Get all valid moves from the current board position
-    ---@return table moves List of valid moves
+    ---@return [integer, integer][] moves List of valid moves
     self.getLegalMoves = function()
         local moves = {}
 
