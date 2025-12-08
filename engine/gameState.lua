@@ -1,4 +1,4 @@
-local BU = require('binUtils')
+local BU = require('engine.binUtils')
 
 ---@return GameState
 return function()

@@ -1,7 +1,7 @@
 print('Testing the GameState\'s initial state')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 -- X should be the first player to play
 ensure(gameState.isXsTurn, true, 'X goes first')

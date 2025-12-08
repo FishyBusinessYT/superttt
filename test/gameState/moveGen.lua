@@ -1,7 +1,7 @@
 print('Testing GameState.getLegalMoves')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 ---Helper function to reduce code repetition when testing move generation
 ---@param fb integer The board to start counting at
