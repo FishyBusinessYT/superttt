@@ -1,29 +1,19 @@
+local board = require('ui.board')()
+local GS = require('engine.gameState')
+
 WINHEIGHT = 900
 WINWIDTH = 900
 
+local gameState = GS()
 function love.load()
     love.window.setMode(WINHEIGHT, WINWIDTH, { fullscreen = false })
+    gameState.placeMark({1, 2})
+    gameState.placeMark({2, 5})
+    gameState.placeMark({5, 1})
+    gameState.placeMark({1, 4})
 end
 
-local cell_size = 60
-local tiles = { 1, 2, 1, 1, 1, 1, 0, 0, 0, 2, 0, 0, 2, 1, 2, 2, 2, 1 }
 
 function love.draw()
-    local tile = 1
-    for y = 0, 9 do
-        for x = 0, 9 do
-            local color = (tiles[tile] == 1 and { 1, 0, 0 })
-                or (tiles[tile] == 2 and { 0, 1, 0 })
-                or { 0, 0, 1 }
-            love.graphics.setColor(color)
-            love.graphics.rectangle(
-                'fill',
-                x * cell_size,
-                y * cell_size,
-                cell_size,
-                cell_size
-            )
-            tile = tile + 1
-        end
-    end
+    board.draw(gameState)
 end
