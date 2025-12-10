@@ -6,6 +6,7 @@ WINHEIGHT = 900
 WINWIDTH = 900
 
 local gameState = GS()
+
 function love.load()
     love.window.setMode(WINHEIGHT, WINWIDTH, { fullscreen = false })
     love.graphics.setBackgroundColor(1, 1, 1)
@@ -15,5 +16,8 @@ function love.load()
     gameState.placeMark({ 7, 9 })
 end
 
-function love.draw()
-    board.draw(gameState) end
+function love.draw() board.draw(gameState) end
+
+function love.textinput(t)
+    if t == ' ' then gameState.placeMark({ 9, 1 }) end
+end

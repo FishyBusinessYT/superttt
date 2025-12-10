@@ -1,10 +1,11 @@
 ---@return Board
 return function()
     ---@class Board
-    ---@field cell_size number Size of each cell
     local self = {}
 
-    self.cell_size = 100
+    local cell_size = 100
+    local xIcon = love.graphics.newImage('assets/xIcon.png')
+    local oIcon = love.graphics.newImage('assets/oIcon.png')
 
     ---Takes an X and Y value and returns the corresponding CellPos
     ---@param x integer
@@ -16,62 +17,25 @@ return function()
         return { b, c }
     end
 
-    local function drawXMark(x, y)
-        love.graphics.setColor(1, 0, 0)
-
-        love.graphics.line(
-            x * self.cell_size,
-            y * self.cell_size,
-            (x + 1) * self.cell_size,
-            (y + 1) * self.cell_size
-        )
-        love.graphics.line(
-            (x + 1) * self.cell_size,
-            y * self.cell_size,
-            x * self.cell_size,
-            (y + 1) * self.cell_size
-        )
-    end
-
-    local function drawOMark(x, y)
-        love.graphics.setColor(0, 1, 0)
-        love.graphics.circle(
-            'line',
-            x * self.cell_size + self.cell_size / 2,
-            y * self.cell_size + self.cell_size / 2,
-            self.cell_size / 2,
-            12
-        )
-    end
-
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
+        love.graphics.setColor(0, 0, 0)
         for y = 0, 8 do
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.line(
-                0,
-                y * self.cell_size,
-                9 * self.cell_size,
-                y * self.cell_size
-            )
-            love.graphics.line(
-                y * self.cell_size,
-                0,
-                y * self.cell_size,
-                9 * self.cell_size
-            )
+            love.graphics.line(0, y * cell_size, 9 * cell_size, y * cell_size)
+            love.graphics.line(y * cell_size, 0, y * cell_size, 9 * cell_size)
 
             for x = 0, 8 do
                 local owner = gameState.getCellOwner(XYtoCellPos(x + 1, y + 1))
 
                 if owner == 1 then
-                    drawXMark(x, y)
+                    love.graphics.draw(xIcon, x * cell_size, y * cell_size)
                 elseif owner == 2 then
-                    drawOMark(x, y)
+                    love.graphics.draw(oIcon, x * cell_size, y * cell_size)
                 end
             end
         end
     end
+
     return self
 end
