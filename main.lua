@@ -8,11 +8,9 @@ WINWIDTH = 900
 local gameState = GS()
 function love.load()
     love.window.setMode(WINHEIGHT, WINWIDTH, { fullscreen = false })
-    gameState.placeMark({1, 2})
-    gameState.placeMark({2, 1})
+    gameState.placeMark({ 1, 2 })
+    gameState.placeMark({ 2, 7 })
+    gameState.placeMark({ 7, 9 })
 end
 
-
-function love.draw()
-    board.draw(gameState)
-end
+function love.draw() board.draw(gameState) end

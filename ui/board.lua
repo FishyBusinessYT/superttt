@@ -12,7 +12,7 @@ return function()
     ---@return [integer, integer]
     local function XYtoCellPos(x, y)
         local b = math.ceil(x / 3) + 3 * (math.ceil(y / 3) - 1)
-        local c = ((x - 1) % 3) + 1 + 3 * (y - 1) % 3
+        local c = ((x - 1) % 3) + 1 + 3 * ((y - 1) % 3)
         return { b, c }
     end
 
@@ -26,6 +26,7 @@ return function()
                 local color = owner == 1 and { 1, 0, 0 }
                     or (owner == 2 and { 0, 1, 0 })
                     or { 0, 0, 1 }
+
                 love.graphics.setColor(color)
                 love.graphics.rectangle(
                     'fill',
