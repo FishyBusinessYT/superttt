@@ -22,6 +22,9 @@ return function()
     self.draw = function(gameState)
         love.graphics.setColor(0, 0, 0)
         for y = 0, 8 do
+            love.graphics.setLineWidth(1)
+            if y % 3 == 0 then love.graphics.setLineWidth(5) end
+
             love.graphics.line(0, y * cell_size, 9 * cell_size, y * cell_size)
             love.graphics.line(y * cell_size, 0, y * cell_size, 9 * cell_size)
 
