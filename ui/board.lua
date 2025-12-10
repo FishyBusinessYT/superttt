@@ -12,16 +12,16 @@ return function()
     ---@return [integer, integer]
     local function XYtoCellPos(x, y)
         local b = math.ceil(x / 3) + 3 * (math.ceil(y / 3) - 1)
-        local c = ((x - 1) % 3) + 3 * (y - 1) % 3
+        local c = ((x - 1) % 3) + 1 + 3 * (y - 1) % 3
         return { b, c }
     end
 
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
-        for y = 0, 9 do
-            for x = 0, 9 do
-                local cellPos = XYtoCellPos(x, y)
+        for y = 0, 8 do
+            for x = 0, 8 do
+                local cellPos = XYtoCellPos(x + 1, y + 1)
                 local owner = gameState.getCellOwner(cellPos)
                 local color = owner == 1 and { 1, 0, 0 }
                     or (owner == 2 and { 0, 1, 0 })

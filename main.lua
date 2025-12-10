@@ -1,5 +1,6 @@
 local board = require('ui.board')()
 local GS = require('engine.gameState')
+package.path = './?/init.lua;' .. package.path
 
 WINHEIGHT = 900
 WINWIDTH = 900
@@ -8,9 +9,7 @@ local gameState = GS()
 function love.load()
     love.window.setMode(WINHEIGHT, WINWIDTH, { fullscreen = false })
     gameState.placeMark({1, 2})
-    gameState.placeMark({2, 5})
-    gameState.placeMark({5, 1})
-    gameState.placeMark({1, 4})
+    gameState.placeMark({2, 1})
 end
 
 
