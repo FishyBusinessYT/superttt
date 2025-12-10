@@ -103,7 +103,7 @@ return function()
         if #moveHistory ~= 0 then -- Every move after the first needs validation
             local forcedBoard = moveHistory[#moveHistory][2]
             if self.getCellOwner(cellPos) then
-                error('That cell is unoccupied')
+                error('That cell is occupied')
             elseif self.getBoardOwner(board) then
                 error('That board has already been won')
             elseif
