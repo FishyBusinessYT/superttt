@@ -1,7 +1,7 @@
 print('Testing GameState.placeMark and GameState.undoMove')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 ---One place to test placeMark under different circumstances
 ---@param board integer

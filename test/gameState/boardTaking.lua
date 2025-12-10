@@ -1,7 +1,7 @@
 print('Testing board taking')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 -- First let's have X take board 1
 gameState.placeMark({ 1, 2 }) -- X

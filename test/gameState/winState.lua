@@ -1,7 +1,7 @@
 print('Testing GameState win state checkin')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 gameState.placeMark({ 1, 3 }) -- X
 gameState.placeMark({ 3, 1 }) -- O

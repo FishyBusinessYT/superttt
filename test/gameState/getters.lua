@@ -1,7 +1,7 @@
 print('Testing GameState\'s getter methods')
 
-local gameState = require('gameState')()
-local ensure = require('test.ensure')
+local gameState = require('test.utils').GS()
+local ensure = require('test.utils').ensure
 
 -- Ensure these functions can take b and c values from 1-9
 for b = 1, 9 do
