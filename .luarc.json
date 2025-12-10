@@ -1,4 +1,5 @@
 {
+    "runtime.version": "LuaJIT",
     "workspace.userThirdParty": ["${env:HOME}/.local/share/LuaAddons"],
     "workspace.library": ["${env:HOME}/.local/share/LuaAddons/love2d/library"]
 }
