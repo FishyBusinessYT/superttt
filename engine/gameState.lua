@@ -7,7 +7,7 @@ return function()
     ---@field omarks integer[] A table of binary strings storing all of O's marks
     ---@field xwon integer A binary string storing the boards X has won
     ---@field owon integer A binary string storing the boards O has won
-    ---@field isXsTurn boolean True when it's X's turn to play, false when it's O's 
+    ---@field isXsTurn boolean True when it's X's turn to play, false when it's O's
     ---@field winner integer? 1 for X, 2 for O, and nil for neither
     local self = {}
 
@@ -36,10 +36,10 @@ return function()
 
         for board = 1, 9 do
             for _, mask in ipairs(masks) do
-                if self.omarks[board] & mask == mask then
+                if bit.band(self.omarks[board], mask) == mask then
                     self.owon = BU.setBit(self.owon, board, 1)
                     break
-                elseif self.xmarks[board] & mask == mask then
+                elseif bit.band(self.xmarks[board], mask) == mask then
                     self.xwon = BU.setBit(self.xwon, board, 1)
                     break
                 end
@@ -47,14 +47,14 @@ return function()
         end
 
         assert(
-            self.owon & self.xwon == 0,
+            bit.band(self.owon, self.xwon) == 0,
             'The same board has somehow been won by both players'
         )
 
         for _, mask in ipairs(masks) do
-            if self.owon & mask == mask then
+            if bit.band(self.owon, mask) == mask then
                 self.winner = 2
-            elseif self.xwon & mask == mask then
+            elseif bit.band(self.xwon, mask) == mask then
                 self.winner = 1
             end
         end
