@@ -1,37 +1,22 @@
-local board = require('ui.board')()
-local GS = require('engine.gameState')
 package.path = './?/init.lua;' .. package.path
 
-WINHEIGHT = 900
-WINWIDTH = 900
+local board = require('ui.board')()
+local bar = require('ui.bar')()
+local gameState = require('engine.gameState')()
 
-local gameState = GS()
+WINHEIGHT = 1200
+WINWIDTH = 1920
 
 function love.load()
-    love.window.setMode(WINHEIGHT, WINWIDTH, { fullscreen = false })
-    love.graphics.setBackgroundColor(1, 1, 1)
-
-    --gameState.placeMark({ 1, 2 })
-    --gameState.placeMark({ 2, 1 })
-    --gameState.placeMark({ 1, 3 })
-    --gameState.placeMark({ 3, 1 })
-    --gameState.placeMark({ 1, 1 })
-
-    gameState.placeMark({5, 1})
-    gameState.placeMark({1, 5})
-    gameState.placeMark({5, 2})
-    gameState.placeMark({2, 5})
-    gameState.placeMark({5, 3})
-
-    gameState.placeMark({3, 8})
-    gameState.placeMark({8, 1})
-    gameState.placeMark({1, 9})
-    gameState.placeMark({9, 1})
-    gameState.placeMark({1, 1})
+    love.window.setMode(WINWIDTH, WINHEIGHT, { fullscreen = true })
+    love.graphics.setBackgroundColor(1, 0, 1)
 end
 
-function love.draw() board.draw(gameState) end
+function love.draw()
+    board.draw(gameState)
+    bar.draw(gameState.isXsTurn)
+end
 
 function love.textinput(t)
-    if t == ' ' then gameState.placeMark({ 9, 1 }) end
+    if t == ' ' then gameState.placeMark({ 2, 1 }) end
 end
