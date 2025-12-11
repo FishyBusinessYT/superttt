@@ -32,7 +32,7 @@ return function()
 
     ---Draw the grid to the screen
     local function drawGrid()
-        for i = 1, 8 do
+        for i = 0, 9 do
             --Every third line is thicker to separate boards
             love.graphics.setLineWidth(i % 3 == 0 and 5 or 1)
 
