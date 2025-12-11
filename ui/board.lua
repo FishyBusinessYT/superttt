@@ -17,6 +17,15 @@ return function()
         return { b, c }
     end
 
+    local function cellPosToXY(cellPos)
+        local b = cellPos[1]
+        local c = cellPos[2]
+
+        local x = ((c - 1) % 3) + 3 * ((b - 1) % 3)
+        local y = math.ceil(c / 3) + 3 * (math.ceil(b / 3) - 1) - 1
+        return x, y
+    end
+
     ---Draw the grid to the screen
     local function drawGrid()
         for i = 1, 8 do
@@ -71,6 +80,24 @@ return function()
         end
     end
 
+    ---Highlight all cells where a mark can be placed by the next player
+    ---@param gameState GameState
+    local function highlightLegalMoves(gameState)
+        local legalMoves = gameState.getLegalMoves()
+        for _, move in ipairs(legalMoves) do
+            local x, y = cellPosToXY(move)
+
+            love.graphics.setColor({ 0, 0.5, 0, 0.5 })
+            love.graphics.rectangle(
+                'fill',
+                x * cell_size,
+                y * cell_size,
+                cell_size,
+                cell_size
+            )
+        end
+    end
+
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
@@ -79,7 +106,7 @@ return function()
         drawGrid()
         drawMarks(gameState)
         highlightTaken(gameState)
-        --highlightLegalMoves(gameState)
+        highlightLegalMoves(gameState)
     end
 
     return self
