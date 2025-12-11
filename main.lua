@@ -9,12 +9,12 @@ WINWIDTH = 1920
 
 function love.load()
     love.window.setMode(WINWIDTH, WINHEIGHT, { fullscreen = true })
-    love.graphics.setBackgroundColor(1, 0, 1)
+    love.graphics.setBackgroundColor(1, 0.9, 1)
 end
 
 function love.draw()
-    board.draw(gameState)
     bar.draw(gameState.isXsTurn)
+    board.draw(gameState)
 end
 
 function love.textinput(t)
