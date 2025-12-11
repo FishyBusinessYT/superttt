@@ -17,6 +17,10 @@ return function()
         return { b, c }
     end
 
+    ---Takes a cellPos and returns the corresponding X and Y values
+    ---@param cellPos [integer, integer]
+    ---@return integer
+    ---@return integer
     local function cellPosToXY(cellPos)
         local b = cellPos[1]
         local c = cellPos[2]
