@@ -13,10 +13,10 @@ function love.load()
 end
 
 function love.draw()
-    bar.draw(gameState.isXsTurn)
+    bar.draw(gameState.isXsTurn, gameState.winner)
     board.draw(gameState)
 end
 
 function love.textinput(t)
-    if t == ' ' then gameState.placeMark({ 2, 1 }) end
+    if t == ' ' then gameState.placeMark({ 7, 9 }) end
 end

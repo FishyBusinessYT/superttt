@@ -12,24 +12,31 @@ return function()
     }
     local color = {
         text = { 0, 0, 0 },
-        bar = { 0.6, 0.7, 0.8 },
+        xTurn = { 1, 0.5, 0.5 },
+        oTurn = { 0.5, 0.5, 1 },
+        xWinner = { 1, 0.5, 0.5 },
+        oWinner = { 0.5, 0.5, 1 },
     }
 
     self.draw = function(isXsTurn, winner)
-        love.graphics.setColor(color.bar)
+        local barText
+        local barColor
+        if winner then
+            barText = winner == 1 and text.xWinner or text.oWinner
+            barColor = winner == 1 and color.xWinner or color.oWinner
+        else
+            barText = isXsTurn and text.xTurn or text.oTurn
+            barColor = isXsTurn and color.xTurn or color.oTurn
+        end
+
+        local textX = (WINWIDTH - barText:getWidth()) / 2
+        local textY = WINHEIGHT - (100 - barText:getHeight())
+
+        love.graphics.setColor(barColor)
         love.graphics.rectangle('fill', 0, 1100, WINWIDTH, WINHEIGHT)
 
         love.graphics.setColor(color.text)
-        local currentText
-        if winner then
-            currentText = winner == 1 and text.xWinner or text.oWinner
-        else
-            currentText = isXsTurn and text.xTurn or text.oTurn
-        end
-
-        local textX = (WINWIDTH - currentText:getWidth()) / 2
-        local textY = WINHEIGHT - (100 - currentText:getHeight())
-        love.graphics.draw(currentText, textX, textY)
+        love.graphics.draw(barText, textX, textY)
     end
     return self
 end
