@@ -33,6 +33,7 @@ return function()
 
     ---Draw the grid to the screen
     local function drawGrid()
+        love.graphics.setColor(0, 0, 0)
         for i = 0, 9 do
             --Every third line is thicker to separate boards
             love.graphics.setLineWidth(i % 3 == 0 and 5 or 1)
@@ -88,8 +89,8 @@ return function()
                 )
                 love.graphics.rectangle(
                     'fill',
-                    x,
-                    y,
+                    startX + x,
+                    startY + y,
                     cell_size * 3,
                     cell_size * 3
                 )
@@ -107,8 +108,8 @@ return function()
             love.graphics.setColor({ 0, 0.5, 0, 0.5 })
             love.graphics.rectangle(
                 'fill',
-                x * cell_size,
-                y * cell_size,
+                startX + x * cell_size,
+                startY + y * cell_size,
                 cell_size,
                 cell_size
             )
@@ -118,7 +119,6 @@ return function()
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
-        love.graphics.setColor(0, 0, 0)
 
         drawGrid()
         drawMarks(gameState)
