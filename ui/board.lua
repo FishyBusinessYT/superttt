@@ -66,8 +66,8 @@ return function()
                 if owner then
                     love.graphics.draw(
                         owner == 1 and xIcon or oIcon,
-                        x * cell_size,
-                        y * cell_size
+                        startX + x * cell_size,
+                        startY + y * cell_size
                     )
                 end
             end
