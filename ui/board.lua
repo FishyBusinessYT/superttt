@@ -6,6 +6,7 @@ return function()
     local cell_size = 100
     local xIcon = love.graphics.newImage('assets/xIcon.png')
     local oIcon = love.graphics.newImage('assets/oIcon.png')
+    local startX, startY = (1920 - 900) / 2, 100
 
     ---Takes an X and Y value and returns the corresponding CellPos
     ---@param x integer
@@ -36,10 +37,22 @@ return function()
             --Every third line is thicker to separate boards
             love.graphics.setLineWidth(i % 3 == 0 and 5 or 1)
 
-            --Draw a horizontal line
-            love.graphics.line(0, i * cell_size, 9 * cell_size, i * cell_size)
-            --Draw a vertical line
-            love.graphics.line(i * cell_size, 0, i * cell_size, 9 * cell_size)
+            local hLine = {
+                startX,
+                startY + i * cell_size,
+                startX + 9 * cell_size,
+                startY + i * cell_size,
+            }
+            local vLine = {
+                startX + i * cell_size,
+                startY,
+                startX + i * cell_size,
+                startY + 9 * cell_size,
+            }
+
+            love.graphics.line(hLine)
+            love.graphics.line(vLine)
+
         end
     end
 
