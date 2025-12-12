@@ -53,7 +53,6 @@ return function()
 
             love.graphics.line(hLine)
             love.graphics.line(vLine)
-
         end
     end
 
@@ -119,7 +118,6 @@ return function()
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
-
         drawGrid()
         drawMarks(gameState)
         highlightTaken(gameState)
