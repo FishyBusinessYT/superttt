@@ -6,6 +6,7 @@ return function()
     local cell_size = 100
     local xIcon = love.graphics.newImage('assets/xIcon.png')
     local oIcon = love.graphics.newImage('assets/oIcon.png')
+    local startX, startY = (1920 - 900) / 2, 100
 
     ---Takes an X and Y value and returns the corresponding CellPos
     ---@param x integer
@@ -32,14 +33,26 @@ return function()
 
     ---Draw the grid to the screen
     local function drawGrid()
-        for i = 1, 8 do
+        love.graphics.setColor(0, 0, 0)
+        for i = 0, 9 do
             --Every third line is thicker to separate boards
             love.graphics.setLineWidth(i % 3 == 0 and 5 or 1)
 
-            --Draw a horizontal line
-            love.graphics.line(0, i * cell_size, 9 * cell_size, i * cell_size)
-            --Draw a vertical line
-            love.graphics.line(i * cell_size, 0, i * cell_size, 9 * cell_size)
+            local hLine = {
+                startX,
+                startY + i * cell_size,
+                startX + 9 * cell_size,
+                startY + i * cell_size,
+            }
+            local vLine = {
+                startX + i * cell_size,
+                startY,
+                startX + i * cell_size,
+                startY + 9 * cell_size,
+            }
+
+            love.graphics.line(hLine)
+            love.graphics.line(vLine)
         end
     end
 
@@ -53,8 +66,8 @@ return function()
                 if owner then
                     love.graphics.draw(
                         owner == 1 and xIcon or oIcon,
-                        x * cell_size,
-                        y * cell_size
+                        startX + x * cell_size,
+                        startY + y * cell_size
                     )
                 end
             end
@@ -75,8 +88,8 @@ return function()
                 )
                 love.graphics.rectangle(
                     'fill',
-                    x,
-                    y,
+                    startX + x,
+                    startY + y,
                     cell_size * 3,
                     cell_size * 3
                 )
@@ -94,8 +107,8 @@ return function()
             love.graphics.setColor({ 0, 0.5, 0, 0.5 })
             love.graphics.rectangle(
                 'fill',
-                x * cell_size,
-                y * cell_size,
+                startX + x * cell_size,
+                startY + y * cell_size,
                 cell_size,
                 cell_size
             )
@@ -105,8 +118,6 @@ return function()
     ---Draw this board to the screen
     ---@param gameState GameState
     self.draw = function(gameState)
-        love.graphics.setColor(0, 0, 0)
-
         drawGrid()
         drawMarks(gameState)
         highlightTaken(gameState)
