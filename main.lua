@@ -2,7 +2,10 @@ package.path = './?/init.lua;' .. package.path
 
 local board = require('ui.board')()
 local bar = require('ui.bar')()
+
 local gameState = require('engine.gameState')()
+local player1 = nil -- Instantiate an AI
+local player2 = nil -- Instantiate another AI
 
 WINHEIGHT = 1200
 WINWIDTH = 1920
@@ -18,5 +21,13 @@ function love.draw()
 end
 
 function love.textinput(t)
-    if t == ' ' then gameState.placeMark({ 7, 9 }) end
+    if t == ' ' then
+        if gameState.isXsTurn then
+            local chosenCellPos = player1.getMove(self.gameState)
+            gameState.placeMark(chosenCellPos)
+        else
+            local chosenCellPos = player2.getMove(self.gameState)
+            gameState.placeMark(chosenCellPos)
+        end
+    end
 end
