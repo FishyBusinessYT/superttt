@@ -1,0 +1,73 @@
+return function()
+    local self = {}
+
+    ---Static evaluation function for a given game state
+    ---@param gameState GameState
+    ---@return number
+    local function staticEval(gameState)
+        local score = 0
+        score = score + gameState.xwon
+        score = score - gameState.owon
+        return score
+    end
+
+    ---Minimax search algorithm to pick the best move
+    ---@param gameState GameState
+    ---@param depth integer
+    ---@param alpha? number
+    ---@param beta? number
+    ---@return number
+    local function minimax(gameState, depth, alpha, beta)
+        alpha = alpha or -math.huge
+        beta = beta or math.huge
+
+        if depth == 0 or gameState.winner ~= nil then
+            return staticEval(gameState)
+        end
+
+        local bestEval = gameState.isXsTurn and -math.huge or math.huge
+        for _, move in ipairs(gameState.getLegalMoves()) do
+            gameState.placeMark(move)
+            local eval = minimax(gameState, depth - 1, alpha, beta)
+            gameState.undoMove()
+
+            if gameState.isXsTurn then
+                bestEval = math.max(bestEval, eval)
+                alpha = math.max(bestEval, eval)
+            else
+                bestEval = math.min(bestEval, eval)
+                beta = math.min(beta, eval)
+            end
+
+            if beta <= alpha then break end
+        end
+        return bestEval
+    end
+
+    ---Pick the best move
+    ---@param gameState GameState
+    ---@return [integer, integer]
+    self.getMove = function(gameState)
+        local bestMove = nil
+        local bestMoveScore = gameState.isXsTurn and -math.huge or math.huge
+
+        for _, move in ipairs(gameState.getLegalMoves()) do
+            gameState.placeMark(move)
+            local score = minimax(gameState, 4)
+            gameState.undoMove()
+
+            if
+                (gameState.isXsTurn and bestMoveScore < score)
+                or (not gameState.isXsTurn and bestMoveScore > score)
+            then
+                bestMoveScore = score
+                bestMove = move
+            end
+        end
+
+        if bestMove == nil then error() end
+        return bestMove
+    end
+
+    return self
+end
